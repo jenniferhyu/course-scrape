@@ -13,3 +13,5 @@ class CatalogItem(Item):
     units = Field()
     details = Field()
     prereqs = Field()
+    course_level = Field()
+    cross_list = Field()

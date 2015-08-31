@@ -21,6 +21,8 @@ class CoursesSpider(CrawlSpider):
 			item['units'] = re.match(units_regex, units_temp).group(0).strip()
 			item['details'] = ''.join(c.xpath('./div/p//text()').extract()).strip()
 			item['prereqs'] = self.get_prereqs(c)
+			item['course_level'] = self.get_course_level(c)
+			item['cross_list'] = self.get_cross_list(c)
 			yield item
 
 	def get_prereqs(self, course):
@@ -29,3 +31,17 @@ class CoursesSpider(CrawlSpider):
 		if not prereqs_body:
 			return ''
 		return prereqs_body[0].next_element.strip()
+
+	def get_course_level(self, course):
+		soup = BeautifulSoup(course.extract(), 'lxml')
+		course_level_body = soup.body.findAll(text='Subject/Course Level:')
+		if not course_level_body:
+			return '' #shouldn't happen
+		return course_level_body[0].next_element.strip().split('/')[-1]
+
+	def get_cross_list(self, course):
+		soup = BeautifulSoup(course.extract(), 'lxml')
+		cross_list_body = soup.body.findAll(text='Also listed as:')
+		if not cross_list_body:
+			return ''
+		return cross_list_body[0].next_element.strip()
