@@ -12,15 +12,20 @@ class CoursesSpider(CrawlSpider):
 
 	def parse_item(self, response):
 		courses = response.xpath('//*[@id="courseinventorycontainer"]/div/div')
-		soup = BeautifulSoup(response.body_as_unicode(), 'lxml')
-		course_body = soup.find_all('div', class_="coursedetails")
 		units_regex = ur'\d+\s(-\s\d+)?' # regex for cases when `1 - 12 units` or `3 units`
-		for c, c_info in zip(courses, course_body):
+		for c in courses:
 			item = CatalogItem()
 			item['code'] = c.xpath('./p/a/span[1]/text()').extract()
 			item['title'] = c.xpath('./p/a/span[2]/text()').extract()[0]
 			units_temp = c.xpath('./p/a/span[3]/text()').extract()[0]
 			item['units'] = re.match(units_regex, units_temp).group(0).strip()
 			item['details'] = ''.join(c.xpath('./div/p//text()').extract()).strip()
-			item['prereqs'] = c_info.text # needs better formatting but we have found the workaround!
+			item['prereqs'] = self.get_prereqs(c)
 			yield item
+
+	def get_prereqs(self, course):
+		soup = BeautifulSoup(course.extract(), 'lxml')
+		prereqs_body = soup.body.findAll(text='Prerequisites:')
+		if not prereqs_body:
+			return ''
+		return prereqs_body[0].next_element.strip()
