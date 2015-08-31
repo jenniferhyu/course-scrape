@@ -15,7 +15,7 @@ class CoursesSpider(CrawlSpider):
 		units_regex = ur'\d+\s(-\s\d+)?' # regex for cases when `1 - 12 units` or `3 units`
 		for c in courses:
 			item = CatalogItem()
-			item['code'] = c.xpath('./p/a/span[1]/text()').extract()
+			item['code'] = c.xpath('./p/a/span[1]/text()').extract()[0]
 			item['title'] = c.xpath('./p/a/span[2]/text()').extract()[0]
 			units_temp = c.xpath('./p/a/span[3]/text()').extract()[0]
 			item['units'] = re.match(units_regex, units_temp).group(0).strip()
