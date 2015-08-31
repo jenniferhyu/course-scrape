@@ -12,4 +12,4 @@ class CatalogItem(Item):
     title = Field()
     units = Field()
     details = Field()
-    #prereqs = Field()
+    prereqs = Field()
