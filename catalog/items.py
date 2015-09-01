@@ -8,7 +8,8 @@
 from scrapy import Item, Field
 
 class CatalogItem(Item):
-    code = Field()
+    dept = Field()
+    class_num = Field()
     title = Field()
     units = Field()
     details = Field()
