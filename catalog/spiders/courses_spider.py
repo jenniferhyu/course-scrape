@@ -23,9 +23,9 @@ class CoursesSpider(CrawlSpider):
 			units_temp = c.xpath('./p/a/span[3]/text()').extract()[0]
 			item['units'] = re.match(units_regex, units_temp).group(0).strip()
 			item['details'] = ''.join(c.xpath('./div/p//text()').extract()).strip()
-			item['prereqs'] = self.get_prereqs(c)
-			item['course_level'] = self.get_course_level(c)
-			item['cross_list'] = self.get_cross_list(c)
+			item['prereqs'] = self.get_prereqs(c, soup)
+			item['course_level'] = self.get_course_level(c, soup)
+			item['cross_list'] = self.get_cross_list(c, soup)
 			yield item
 
 	def get_prereqs(self, course, soup):
