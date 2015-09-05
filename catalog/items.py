@@ -9,10 +9,17 @@ from scrapy import Item, Field
 
 class CatalogItem(Item):
     dept = Field()
+    full_dept = Field()
     class_num = Field()
     title = Field()
     units = Field()
-    details = Field()
+    description = Field()
     prereqs = Field()
     course_level = Field()
     cross_list = Field()
+    grading = Field()
+    final_exam = Field()
+    format = Field()
+    previously = Field()
+    fall = Field()
+    spring = Field()
