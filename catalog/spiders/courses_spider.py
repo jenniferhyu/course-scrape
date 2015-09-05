@@ -41,13 +41,13 @@ class CoursesSpider(CrawlSpider):
 	def find_terms_offered(self, description): # make default description 
 		terms = description[0]
 		terms = re.sub(ur'Terms offered: ', '', terms).split()
-		fall_spring = [0,0]
+		fall_spring = [False, False]
 		for t in terms:
 			if not t.isdigit():
 				if t == 'Fall':
-					fall_spring[0] = 1
+					fall_spring[0] = True
 				elif t == 'Spring':
-					fall_spring[1] = 1
+					fall_spring[1] = True
 				else:
 					continue # we're not counting summer for now
 		return fall_spring
@@ -72,8 +72,6 @@ class CoursesSpider(CrawlSpider):
 		if grading_option:
 			split_arr = grading_option.next_element.strip().split('.')
 			return split_arr
-			# info = filter(lambda x: x != '', split_arr)
-			# return info
 
 	def get_class_format(self, course, soup):
 		class_format_body = soup.body.find(text='Hours & Format')
