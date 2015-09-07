@@ -49,7 +49,8 @@ class BreadthParser(Parser): # maybe use Parser
 			pickle.dump(classes, handle)
 		return classes
 
-def main():	p = Parser()
+def main():	
+	p = Parser()
 	b = BreadthParser()
 	url_leafleaf = b.breadths[0] # will loop later or a better concurrency-related script
 	soup = b.setup_soup(url_leaf)
