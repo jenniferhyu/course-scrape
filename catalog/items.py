@@ -23,3 +23,4 @@ class CatalogItem(Item):
     previously = Field()
     fall = Field()
     spring = Field()
+    credit_restriction = Field()

@@ -24,12 +24,15 @@ class CoursesSpider(CrawlSpider):
 			item['fall'], item['spring'] = self.find_terms_offered(self.get_description(c))
 			item['prereqs'] = self.get_prereqs(c, soup)
 			item['cross_list'] = self.get_cross_list(c, soup)
-			item['grading'], item['final_exam'] = self.get_grading_option(c, soup)
+			item['grading'] = self.get_grading_option(c,soup)[0]
+			item['final_exam'] = self.get_grading_option(c, soup)[1] if self.get_grading_option(c, soup)[1] != '' else None # TODO: clean this up
 			item['format'] = self.get_class_format(c, soup)
 			item['previously'] = self.get_previously(c, soup)
+			item['credit_restriction'] = self.get_credit_restriction(c, soup)
 			yield item
 
-	def parse_units(self, course):
+	def remove_units(self, course):
+		"""Removes the word units from the input"""
 		units_regex = ur'\d+\s(-\s\d+)?' # regex for cases when `1 - 12 units` or `3 units`
 		units_temp = course.xpath('./p/a/span[3]/text()').extract()[0]
 		num_units = re.match(units_regex, units_temp).group(0).strip()
@@ -38,7 +41,7 @@ class CoursesSpider(CrawlSpider):
 	def get_description(self, course):
 		return ''.join(course.xpath('./div/p//text()').extract()).strip().split('\n')
 
-	def find_terms_offered(self, description): # make default description 
+	def find_terms_offered(self, description): # TODO: make default description 
 		terms = description[0]
 		terms = re.sub(ur'Terms offered: ', '', terms).split()
 		fall_spring = [False, False]
@@ -70,8 +73,7 @@ class CoursesSpider(CrawlSpider):
 	def get_grading_option(self, course, soup):
 		grading_option = soup.body.find(text=re.compile(ur'Grading.*'))
 		if grading_option:
-			split_arr = grading_option.next_element.strip().split('.')
-			return split_arr
+			return grading_option.next_element.strip().split('.')
 
 	def get_class_format(self, course, soup):
 		class_format_body = soup.body.find(text='Hours & Format')
@@ -83,4 +85,7 @@ class CoursesSpider(CrawlSpider):
 		if previously_body:
 			return previously_body.next_element.strip()
 
-	#TODO: get credit_options
+	def get_credit_restriction(self, course, soup):
+		credit_body = soup.body.find(text=re.compile(ur'Credit.*'))
+		if credit_body:
+			return credit_body.next_element.strip()
