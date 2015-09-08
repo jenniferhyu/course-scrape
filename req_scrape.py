@@ -64,9 +64,9 @@ class FLParser(Parser):
 						   "Norwegian":"NORWEGN",
 						   }
 		for i in range(1, len(rows), 3):
-			classes = rows[i].text.split()
+			classes = rows[i].text.split(';')
+			classes = classes.split()
 			classes = [c.strip(",") for c in classes[1:]]
-			classes = [c.strip(";") for c in classes]
 			dept = classes[0]
 			lang = rows[i].previous_sibling.previous.sibling.text
 			if dept in changed_dept:
