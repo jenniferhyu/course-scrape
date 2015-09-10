@@ -46,6 +46,7 @@ class BreadthParser(Parser):
 class FLParser(Parser):
 	def __init__(self):
 		self.url_stem = "http://engineering.berkeley.edu/student-services/degree-requirements/foreign-language-courses"
+		self.file_name = "fl"
 
 	def make_fl_dict(self, soup):
 		rows = soup.find_all('td')
