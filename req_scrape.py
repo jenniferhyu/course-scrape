@@ -18,7 +18,7 @@ class Parser(object):
 			pickle.dump(dict_dump, handle)
 
 class BreadthParser(Parser):
-	def __init__(self, b):
+	def __init__(self, index):
 		self.url_stem = "http://guide.berkeley.edu/undergraduate/colleges-schools/letters-science/breadth-requirement-"
 		self.breadths = {"arts-literature":"al", 
 					"biological-science":"bs", 
@@ -27,10 +27,11 @@ class BreadthParser(Parser):
 					"philosophy-values":"pv", 
 					"physical-science":"ps", 
 					"social-behavioral-sciences":"sbs"}
-		self.file_name = self.breadths[b]
+		self.url_leaf = self.breadths.keys()[index]
+		self.file_name = self.breadths[self.url_leaf]
 		self.reqs = {}
 
-	def make_req_dict(self, soup, url_leaf, abbrev):
+	def make_req_dict(self, soup, abbrev):
 		# TODO: To convert dept abbrev to full name?
 		rows = soup.find_all('tr')
 		curr_dept = ""
