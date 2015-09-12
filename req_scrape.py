@@ -36,7 +36,7 @@ class BreadthParser(Parser):
 		rows = soup.find_all('tr')
 		curr_dept = ""
 		for item in rows:
-			dept, course_num = item.a['title'].split()
+			dept, course_num = item.a['title'].split() # FIX THIS HERE
 			if dept != curr_dept:
 				self.reqs[dept] = [course_num]
 				curr_dept = dept
@@ -47,6 +47,21 @@ class BreadthParser(Parser):
 class ACParser(BreadthParser):
 	def __init__(self):
 		self.url_stem = "http://guide.berkeley.edu/undergraduate/colleges-schools/letters-science/american-cultures-requirement/"
+
+class AHParser(BreadthParser):
+	def __init__(self):
+		self.url_stem = "http://guide.berkeley.edu/undergraduate/colleges-schools/letters-science/american-history-institutions-requirement/"
+
+	def make_ai_dict(self, ah_dict=self.make_req_dict(soup)):
+		"""Makes a separate American Institutions requirement dictionary"""
+		ai = {}
+		if "POLI SCI" in ah_dict:
+			ai["POLI SCI"] = ah_dict["POLI SCI"]
+		return ai
+
+class WritingParser(BreadthParser):
+	def __init__(self):
+		self.url_stem = "http://guide.berkeley.edu/undergraduate/colleges-schools/letters-science/entry-level-writing-requirement/"
 
 class FLParser(Parser):
 	def __init__(self):
