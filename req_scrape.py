@@ -31,7 +31,7 @@ class BreadthParser(Parser):
 		self.file_name = self.breadths[self.url_leaf]
 		self.reqs = {}
 
-	def make_req_dict(self, soup, abbrev):
+	def make_req_dict(self, soup):
 		# TODO: To convert dept abbrev to full name?
 		rows = soup.find_all('tr')
 		curr_dept = ""
@@ -43,6 +43,10 @@ class BreadthParser(Parser):
 			else:
 				self.reqs[dept].append(course_num)
 		return self.reqs
+
+class ACParser(BreadthParser):
+	def __init__(self):
+		self.url_stem = "http://guide.berkeley.edu/undergraduate/colleges-schools/letters-science/american-cultures-requirement/"
 
 class FLParser(Parser):
 	def __init__(self):
